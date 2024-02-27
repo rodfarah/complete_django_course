@@ -9,5 +9,5 @@ def home(request):
 
 def recipe(request, id):
     return render(
-        request=request, template_name="recipes/pages/home.html",
+        request=request, template_name="recipes/pages/recipe-view.html",
         context={"id": id})
