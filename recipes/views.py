@@ -5,3 +5,9 @@ def home(request):
     return render(
         request=request, template_name="recipes/pages/home.html",
         context={"name": "Rodrigo Farah"})
+
+
+def recipe(request, id):
+    return render(
+        request=request, template_name="recipes/pages/home.html",
+        context={"id": id})
