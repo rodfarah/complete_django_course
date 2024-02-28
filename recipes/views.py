@@ -11,4 +11,4 @@ def home(request):
 def recipe(request, id):
     return render(
         request=request, template_name="recipes/pages/recipe-view.html",
-        context={"receita": make_recipe()})
+        context={"recipe": make_recipe()})
