@@ -15,7 +15,11 @@ def category(request, category_id):
         is_published=True, category__id=category_id).order_by('-id')
     return render(
         request, 'recipes/pages/category.html',
-        context={"recipes": recipes})
+        context={
+            "recipes": recipes,
+            "category_name": f'{recipes.first().category.name} - Category |'
+        }
+    )
 
 
 def recipe(request, one_id):
