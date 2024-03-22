@@ -23,11 +23,11 @@ def category(request, category_id):
     )
 
 
-def recipe(request, one_id):
+def one_recipe(request, one_id):
     one_recipe = get_object_or_404(klass=Recipe, id=one_id, is_published=True)
     return render(
         request, "recipes/pages/recipe-view.html",
         context={
-            "recipe": one_recipe,
+            "recipes": one_recipe,
             "is_detail_page": True
         })
