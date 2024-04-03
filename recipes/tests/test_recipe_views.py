@@ -34,12 +34,12 @@ class RecipeViewsTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_recipe_onerecipe_view_function_is_correct(self):
-        view = resolve(reverse('recipes:one_recipe', kwargs={'one_id': 1}))
-        self.assertIs(view.func, views.one_recipe)
+        view = resolve(reverse('recipes:recipe', kwargs={'id': 1}))
+        self.assertIs(view.func, views.recipe)
 
     def test_recipe_onerecipe_returns_404_if_no_recipe_found(self):
         response = self.client.get(
             reverse(
-                'recipes:one_recipe',
-                kwargs={'one_id': 1000}))
+                'recipes:recipe',
+                kwargs={'id': 1000}))
         self.assertEqual(response.status_code, 404)
