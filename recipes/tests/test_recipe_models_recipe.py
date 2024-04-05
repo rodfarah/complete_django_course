@@ -1,0 +1,15 @@
+from .test_recipe_base import RecipeTestBase
+from django.core.exceptions import ValidationError
+
+
+class RecipeModelTest(RecipeTestBase):
+    def setUp(self) -> None:
+        self.recipe = self.make_recipe()
+        return super().setUp()
+
+    def test_recipe_title_raises_error_if_title_has_more_than_65_characters(
+            self):
+        self.recipe.title = "A" * 147
+        # self.recipe.slug = "dsdsadsasdsadasd"
+        with self.assertRaises(ValidationError):
+            self.recipe.full_clean()
