@@ -6,8 +6,8 @@ from recipes.models import Recipe
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
     return render(
-        request=request, template_name="recipes/pages/home.html",
-        context={"recipes": recipes})
+        request=request, template_name='recipes/pages/home.html',
+        context={'recipes': recipes})
 
 
 def category(request, category_id):
@@ -17,8 +17,8 @@ def category(request, category_id):
     return render(
         request, 'recipes/pages/category.html',
         context={
-            "recipes": recipes,
-            "category_name": f'{recipes[0].category.name} - Category | '
+            'recipes': recipes,
+            'category_name': f'{recipes[0].category.name} - Category | '
         }
     )
 
@@ -26,12 +26,12 @@ def category(request, category_id):
 def recipe(request, id):
     recipe = get_object_or_404(klass=Recipe, pk=id, is_published=True,)
     return render(
-        request, "recipes/pages/recipe-view.html",
+        request, 'recipes/pages/recipe-view.html',
         context={
-            "recipe": recipe,
-            "is_detail_page": True
+            'recipe': recipe,
+            'is_detail_page': True
         })
 
 
 def search(request):
-    ...
+    return render(request, 'recipes/pages/search.html')
