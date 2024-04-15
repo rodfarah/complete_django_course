@@ -1,7 +1,8 @@
 from django.http.response import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-# from utils.recipes.factory import make_recipe
+from django.db.models import Q
 from recipes.models import Recipe
+# from utils.recipes.factory import make_recipe
 
 
 def home(request):
@@ -40,11 +41,22 @@ def search(request):
     if not search_term:
         raise Http404()
 
+    recipes = Recipe.objects.filter(
+        # __contains is a django resource. The query text is PART of the search
+        # __icontains is the same, but django also ignores Caps.
+        # Q is the same as 'OR' in a db query.
+        # | (pipe) is also the same as 'OR' in a db query.
+        # result must be published
+        Q(title__icontains=search_term) |
+        Q(description__icontains=search_term),
+        is_published=True
+    ).order_by('-id')
     return render(
         request,
         'recipes/pages/search.html',
         context={
             'page_title': f'Search for "{search_term}" |',
-            'search_term': search_term
+            'search_term': search_term,
+            'recipes': recipes
         }
     )
