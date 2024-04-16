@@ -3,17 +3,30 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.db.models import Q
 from recipes.models import Recipe
 from django.core.paginator import Paginator
+from utils.pagination import make_pagination_range
 
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
 
-    current_page = request.GET.get('page', 1)
-    paginator = Paginator(recipes, 9)
+    recipes_per_page = 9
+    current_page = int(request.GET.get('page', 1))
+    paginator = Paginator(recipes, recipes_per_page)
     page_obj = paginator.get_page(current_page)
+
+    pagination_range = make_pagination_range(
+        page_range=paginator.page_range,
+        qty_pages=4,
+        current_page=current_page,
+    )
+
     return render(
         request=request, template_name='recipes/pages/home.html',
-        context={'recipes': page_obj})
+        context={
+            'recipes': page_obj,
+            'pagination_range': pagination_range
+        }
+    )
 
 
 def category(request, category_id):
