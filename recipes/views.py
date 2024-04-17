@@ -3,13 +3,16 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.db.models import Q
 from recipes.models import Recipe
 from utils.pagination import make_pagination
+import os
+
+RECIPES_PER_PAGE = os.environ.get('RECIPES_PER_PAGE', 9)
 
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
 
     page_obj, pagination_range = make_pagination(
-        request=request, queryset=recipes, per_page=9)
+        request=request, queryset=recipes, per_page=RECIPES_PER_PAGE)
     return render(
         request=request, template_name='recipes/pages/home.html',
         context={
@@ -23,7 +26,7 @@ def category(request, category_id):
     recipes = get_list_or_404(klass=Recipe.objects.filter(
         category__id=category_id, is_published=True,).order_by('-id'))
     page_obj, pagination_range = make_pagination(
-        request=request, queryset=recipes, per_page=9)
+        request=request, queryset=recipes, per_page=RECIPES_PER_PAGE)
     return render(
         request, 'recipes/pages/category.html',
         context={
@@ -62,7 +65,7 @@ def search(request):
     ).order_by('-id')
 
     page_obj, pagination_range = make_pagination(
-        request=request, queryset=recipes, per_page=9)
+        request=request, queryset=recipes, per_page=RECIPES_PER_PAGE)
 
     return render(
         request,
