@@ -1,5 +1,6 @@
 from django.urls import reverse, resolve
 from recipes import views
+from unittest.mock import patch
 from .test_recipe_base import RecipeTestBase
 
 
@@ -28,9 +29,9 @@ class RecipeHomeViewTest(RecipeTestBase):
             'first_name': 'Rodrigo'
         })
         response = self.client.get(reverse('recipes:home'))
-        # content is the template html code. Check it out by using test debug with breakpoint.
+        # content is the template html code. Check it out by using test debug with breakpoint. # noqa: 501
         content = response.content.decode('utf-8')
-        # response.context['recipes'] is a queryset . Check it out by using test debug with breakpoint.
+        # response.context['recipes'] is a queryset . Check it out by using test debug with breakpoint. # noqa: 501
         context = response.context['recipes']
         self.assertIn('Recipe Title', content)
         self.assertIn('5 Minutes', content)
@@ -42,3 +43,17 @@ class RecipeHomeViewTest(RecipeTestBase):
         self.make_recipe(is_published=False)
         response = self.client.get(reverse('recipes:home'))
         self.assertFalse(len(response.content) == 0)
+
+    @patch('recipes.views.RECIPES_PER_PAGE', new=3)
+    def test_recipe_home_is_paginated(self):
+        for n in range(8):
+            kwargs = {'slug': f'r{n}', 'author_data': {'username': f'u{n}'}}
+            self.make_recipe(**kwargs)
+        response = self.client.get(reverse('recipes:home'))
+        recipes = response.context['recipes']
+        paginator = recipes.paginator
+        self.assertEqual(paginator.num_pages, 3)
+        # Check if page one has 3 recipes
+        self.assertEqual(len(paginator.get_page(1)), 3)
+        self.assertEqual(len(paginator.get_page(2)), 3)
+        self.assertEqual(len(paginator.get_page(3)), 2)
