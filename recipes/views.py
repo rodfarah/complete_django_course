@@ -3,13 +3,17 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.db.models import Q
 from recipes.models import Recipe
 from utils.pagination import make_pagination
+from django.contrib import messages
 import os
 
-RECIPES_PER_PAGE = int(os.environ.get('RECIPES_PER_PAGE', 9))
+RECIPES_PER_PAGE = int(os.environ.get('RECIPES_PER_PAGE', 6))
 
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
+
+    messages.error(
+        request, 'I am testing this error flash message!')
 
     page_obj, pagination_range = make_pagination(
         request=request, queryset=recipes, per_page=RECIPES_PER_PAGE)
