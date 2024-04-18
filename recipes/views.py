@@ -14,6 +14,10 @@ def home(request):
 
     messages.error(
         request, 'I am testing this error flash message!')
+    messages.success(
+        request, 'I am testing this success flash message!')
+    messages.info(
+        request, 'I am testing this info flash message!')
 
     page_obj, pagination_range = make_pagination(
         request=request, queryset=recipes, per_page=RECIPES_PER_PAGE)
