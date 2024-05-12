@@ -10,7 +10,7 @@
 
 <div class="main-content container">
     <form action="{% url "authors:create" %}" method="POST">
-    {% csrf_token %}
+        {% csrf_token %}
         <div class="form-content form-content-grid">
             {% for field in form %}
                 <div class="form-group">
@@ -26,7 +26,7 @@
             {% endfor %}
         </div>
         <div class="form-group">
-            <button class="submit">SEND</button>
+            <button type="submit">SEND</button>
         </div>
     </form>
 </div>
