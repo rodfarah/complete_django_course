@@ -84,12 +84,12 @@ class RegisterForm(forms.ModelForm):
                 'required': 'This field must not be empty',
             }
         }
-        widgets = {
-            'first_name': forms.TextInput(attrs={
-                # i.e, add a class to the html code
-                'class': 'input text-input'
-            }),
-        }
+        # widgets = {
+        #     'first_name': forms.TextInput(attrs={
+        #         # i.e, add a class to the html code
+        #         'class': 'input text-input'
+        #     }),
+        # }
 
     def clean_password(self):
         data = self.cleaned_data.get('password')
