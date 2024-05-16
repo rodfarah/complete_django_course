@@ -31,8 +31,9 @@ class RegisterForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         add_placeholder(self.fields['username'], 'Your username')
         add_placeholder(self.fields['email'], 'Your e-mail')
-        add_placeholder(self.fields['first_name'], 'Ex.: John')
-        add_placeholder(self.fields['last_name'], 'Ex.: Doe')
+        add_placeholder(self.fields['first_name'], 'First Name')
+        add_placeholder(self.fields['last_name'], 'Last Name')
+        # as an example, it is even possible to add a css class to the html
         add_attr(self.fields['username'], 'css', 'a-css-class')
 
     password = forms.CharField(
@@ -54,7 +55,8 @@ class RegisterForm(forms.ModelForm):
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Repeat your password'
-        })
+        }),
+        label="Confirm Password"
     )
 
     class Meta:
@@ -84,12 +86,9 @@ class RegisterForm(forms.ModelForm):
         }
         widgets = {
             'first_name': forms.TextInput(attrs={
-                'placeholder': 'Type your username here',
+                # i.e, add a class to the html code
                 'class': 'input text-input'
             }),
-            'password': forms.PasswordInput(attrs={
-                'placeholder': 'Type your password here'
-            })
         }
 
     def clean_password(self):
