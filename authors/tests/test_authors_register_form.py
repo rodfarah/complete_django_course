@@ -1,4 +1,4 @@
-from django.test import TestCase
+from unittest import TestCase
 from authors.forms import RegisterForm
 from parameterized import parameterized
 
@@ -19,7 +19,8 @@ class AuthorRegisterFormUnitTest(TestCase):
 
     @parameterized.expand(
         [('username',
-          'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+          'Required. 150 characters or fewer. Letters, '
+          'digits and @/./+/-/_ only.'),
          ('email', 'The e-mail must be valid.'),
          ('password',
           'Password must have at least one uppercase letter,'
@@ -30,7 +31,7 @@ class AuthorRegisterFormUnitTest(TestCase):
         current_help_text = form[field].field.help_text
         self.assertEqual(current_help_text, help_text)
 
-    @parameterized.expand(
+    @ parameterized.expand(
         [('username', 'Username'),
          ('email', 'E-mail'),
          ('password', 'Password'),
