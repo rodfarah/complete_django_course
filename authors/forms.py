@@ -49,7 +49,9 @@ class RegisterForm(forms.ModelForm):
             'one lowercase letter and one number. The length should be '
             'at least 8 characters.'
         ),
-        validators=[strong_password]
+        validators=[strong_password],
+        label="Password"
+
     )
     password2 = forms.CharField(
         required=True,
@@ -74,7 +76,6 @@ class RegisterForm(forms.ModelForm):
             'first_name': 'First name',
             'last_name': 'Last name',
             'email': 'E-mail',
-            'password': 'Password',
         }
         help_texts = {
             'email': 'The e-mail must be valid.',
@@ -96,9 +97,9 @@ class RegisterForm(forms.ModelForm):
 
         if 'atenção' in data:
             raise ValidationError(
-                'Não digite %(pipoca)s no campo password',
+                'Não digite %(value)s no campo password',
                 code='invalid',
-                params={'pipoca': '"atenção"'}
+                params={'value': '"atenção"'}
             )
 
         return data
