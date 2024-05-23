@@ -30,11 +30,35 @@ class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_placeholder(self.fields['username'], 'Your username')
-        add_placeholder(self.fields['email'], 'Your e-mail')
+        add_placeholder(self.fields['email'], 'Your e-mail address')
         add_placeholder(self.fields['first_name'], 'First Name')
         add_placeholder(self.fields['last_name'], 'Last Name')
         # as an example, it is even possible to add a css class to the html
         add_attr(self.fields['username'], 'css', 'a-css-class')
+
+    first_name = forms.CharField(
+        error_messages={'required': 'Write your first name'},
+        # required = True is already a default so we may ommit it
+        # required=True,
+        label='First Name'
+    )
+
+    last_name = forms.CharField(
+        error_messages={'required': 'Write your last name'},
+        # required=True,
+        label='Last Name'
+    )
+    email = forms.EmailField(
+        # required=True,
+        # widget=forms.EmailInput(attrs={
+        #     'placeholder': 'Insert your e-mail address'
+        # }),
+        error_messages={
+            'required': 'You must insert your e-mail address'
+        },
+        help_text='The e-mail must be valid.',
+        label='E-mail',
+    )
 
     password = forms.CharField(
         required=True,
@@ -54,10 +78,13 @@ class RegisterForm(forms.ModelForm):
 
     )
     password2 = forms.CharField(
-        required=True,
+        # required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Repeat your password'
         }),
+        error_messages={
+            'required': 'You must confirm your password'
+        },
         label="Confirm Password"
     )
 
@@ -71,15 +98,15 @@ class RegisterForm(forms.ModelForm):
             'password',
         ]
         # exclude = ['first_name']
-        labels = {
-            'username': 'Username',
-            'first_name': 'First name',
-            'last_name': 'Last name',
-            'email': 'E-mail',
-        }
-        help_texts = {
-            'email': 'The e-mail must be valid.',
-        }
+        # labels = {
+        #     'username': 'Username',
+        # 'first_name': 'First name',
+        # 'last_name': 'Last name',
+        # 'email': 'E-mail',
+        # }
+        # help_texts = {
+        #     'email': 'The e-mail must be valid.',
+        # }
         error_messages = {
             'username': {
                 'required': 'This field must not be empty',
