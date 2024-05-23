@@ -89,6 +89,32 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         num_of_char = len(self.form_data['username'])
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
-        msg = 'Ensure this value has at most 150 characters'
-        f'(it has {num_of_char}).'
+        msg = ('Ensure this value has at most 150 characters '
+               f'(it has {num_of_char}).')
         self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('username'))
+
+    def test_password_field_have_lower_upper_case_letters_numbers(self):
+        self.form_data['password'] = 'abck23sdd'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        msg = ('Password must have at least one uppercase letter'
+               ', one lowercase letter and one number. '
+               'The length should be at least 8 characters.')
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('password'))
+
+        self.form_data['password'] = 'Sbck23sdd'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        self.assertNotIn(msg, response.context['form'].errors.get('password'))
+
+    def test_valid_password_doesnt_match_valid_password2(self):
+        self.form_data['password'] = 'Adsd23*92'
+        self.form_data['password2'] = 'Adsd23*91'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        msg = 'Password and password2 must be equal'
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get(
+            'password'))
