@@ -21,8 +21,8 @@ class AuthorRegisterFormUnitTest(TestCase):
 
     @parameterized.expand([
         ('username',
-         'Required. 150 characters or fewer. Letters, '
-         'digits and @/./+/-/_ only.'),
+         'Username length must be between 4 and 150 characters, '
+         'with numbers, letters and @.+-_.'),
         ('email', 'The e-mail must be valid.'),
         ('password',
          'Password must have at least one uppercase letter,'
@@ -63,7 +63,8 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     @parameterized.expand([
         ('first_name', 'Write your first name'),
         ('last_name', 'Write your last name'),
-        ('username', 'This field must not be empty'),
+        ('username', 'Required. 4 to 150 characters or fewer. Letters, '
+            'digits and @/./+/-/_ only.'),
         ('email', 'You must insert your e-mail address'),
         ('password', 'Password must not be empty'),
         ('password2', 'You must confirm your password'),
@@ -72,4 +73,22 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.form_data[field] = ''
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
+        self.assertIn(msg, response.content.decode('utf-8'))
+
+    def test_username_field_more_than_4_chars(self):
+        self.form_data['username'] = 'hi'
+        num_of_char = len(self.form_data['username'])
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        msg = 'Ensure this value has at least 4 characters'
+        f'(it has {num_of_char}).'
+        self.assertIn(msg, response.content.decode('utf-8'))
+
+    def test_username_field_less_than_150_chars(self):
+        self.form_data['username'] = 155*"a"
+        num_of_char = len(self.form_data['username'])
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        msg = 'Ensure this value has at most 150 characters'
+        f'(it has {num_of_char}).'
         self.assertIn(msg, response.content.decode('utf-8'))

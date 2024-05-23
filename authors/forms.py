@@ -36,6 +36,18 @@ class RegisterForm(forms.ModelForm):
         # as an example, it is even possible to add a css class to the html
         add_attr(self.fields['username'], 'css', 'a-css-class')
 
+    username = forms.CharField(
+        label="Username",
+        help_text="Username length must be between 4 and 150 characters, "
+        "with numbers, letters and @.+-_.",
+        min_length=4,
+        max_length=150,
+        error_messages={
+            'required': 'Required. 4 to 150 characters or fewer. Letters, '
+            'digits and @/./+/-/_ only.',
+        }
+    )
+
     first_name = forms.CharField(
         error_messages={'required': 'Write your first name'},
         # required = True is already a default so we may ommit it
@@ -107,11 +119,11 @@ class RegisterForm(forms.ModelForm):
         # help_texts = {
         #     'email': 'The e-mail must be valid.',
         # }
-        error_messages = {
-            'username': {
-                'required': 'This field must not be empty',
-            }
-        }
+        # error_messages = {
+        #     'username': {
+        #         'required': 'This field must not be empty',
+        #     }
+        # }
         # widgets = {
         #     'first_name': forms.TextInput(attrs={
         #         # i.e, add a class to the html code
