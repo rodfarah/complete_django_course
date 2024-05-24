@@ -3,6 +3,7 @@ from django.test import TestCase as DjangoTestCase
 from authors.forms import RegisterForm
 from parameterized import parameterized
 from django.urls import reverse
+from django.contrib.messages import constants
 
 
 class AuthorRegisterFormUnitTest(TestCase):
@@ -118,3 +119,21 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.assertIn(msg, response.content.decode('utf-8'))
         self.assertIn(msg, response.context['form'].errors.get(
             'password'))
+
+    def test_register_view_raises_404_if_request_is_get(self):
+        url = reverse('authors:create')
+        response = self.client.get(url, data=self.form_data, follow=True)
+        self.assertEqual(response.status_code, 404)
+
+    # Coverage demands this test, but I dont know how to code it
+
+    # def test_register_create_messages_if_success(self):
+    #     url = reverse('authors:create')
+    #     response = self.client.post(url, data=self.form_data, follow=True)
+    #     session_data = self.client.session['register_form_data']
+    #     self.assertEqual(session_data['username'], 'user')
+    #     messages = list(response.context['messages'])
+    #     msg = 'You are now registered! Please, Log In'
+    #     self.assertEqual(len(messages), 1)
+    #     self.assertEqual(messages[0].message, msg)
+    #     self.assertEqual(messages[0].level, constants.SUCCESS)
