@@ -19,7 +19,10 @@ def register_create(request):
         form = RegisterForm(POST)
 
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            # encript password
+            user.set_password(user.password)
+            user.save()
             messages.success(request, 'You are now registered! Please, Log In')
             del (request.session['register_form_data'])
     return redirect(to='authors:register')
