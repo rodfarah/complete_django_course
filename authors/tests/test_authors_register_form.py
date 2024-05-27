@@ -50,6 +50,7 @@ class AuthorRegisterFormUnitTest(TestCase):
 
 class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     def setUp(self, *args, **kwargs) -> None:
+        # changing this fields may fail some tests bellow
         self.form_data = {
             'first_name': 'first',
             'last_name': 'last',
@@ -140,6 +141,15 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         msg = 'This username already exists. Choose a different one'
         self.assertIn(msg, response.context['form'].errors.get('email'))
         self.assertIn(msg, response.content.decode('utf-8'))
+
+    def test_user_creater_can_login(self):
+        url = reverse('authors:create')
+        self.client.post(url, self.form_data, follow=True)
+        is_authenticated = self.client.login(
+            username='user4',
+            password='Str0ngP@ssword1'
+        )
+        self.assertTrue(is_authenticated)
 
     # Coverage demands this test, but I dont know how to code it
 
