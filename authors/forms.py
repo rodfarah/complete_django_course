@@ -76,6 +76,7 @@ class RegisterForm(forms.ModelForm):
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Your password'
+
         }),
         error_messages={
             'required': 'Password must not be empty'
@@ -154,6 +155,18 @@ class RegisterForm(forms.ModelForm):
     #         )
 
     #     return data
+
+    def clean_email(self):
+
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+
+        if exists:
+            raise ValidationError(
+                'This username already exists. Choose a different one',
+                code='invalid'
+            )
+        return email
 
     def clean(self):
         cleaned_data = super().clean()

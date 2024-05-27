@@ -3,7 +3,6 @@ from django.test import TestCase as DjangoTestCase
 from authors.forms import RegisterForm
 from parameterized import parameterized
 from django.urls import reverse
-from django.contrib.messages import constants
 
 
 class AuthorRegisterFormUnitTest(TestCase):
@@ -55,9 +54,9 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
             'first_name': 'first',
             'last_name': 'last',
             'email': 'fulano@fulano.com',
-            'username': 'user',
-            'password1': 'Str0ngP@ssword',
-            'password2': 'Str0ngP@assword2'
+            'username': 'user4',
+            'password': 'Str0ngP@ssword1',
+            'password2': 'Str0ngP@ssword1'
         }
         return super().setUp()
 
@@ -112,7 +111,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
 
     def test_valid_password_doesnt_match_valid_password2(self):
         self.form_data['password'] = 'Adsd23*92'
-        self.form_data['password2'] = 'Adsd23*91'
+        self.form_data['password2'] = 'YAdsd23*91'
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
         msg = 'Password and password2 must be equal'
@@ -124,6 +123,23 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         url = reverse('authors:create')
         response = self.client.get(url, data=self.form_data, follow=True)
         self.assertEqual(response.status_code, 404)
+
+    def test_email_duplicity_raises_exception(self):
+        url = reverse('authors:create')
+        new_form_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'email': 'fulano@fulano.com',
+            'username': 'user3',
+            'password': 'Str0ngP@ssword5',
+            'password2': 'Str0ngP@ssword5'
+        }
+
+        self.client.post(url, data=new_form_data, follow=True)
+        response = self.client.post(url, data=self.form_data, follow=True)
+        msg = 'This username already exists. Choose a different one'
+        self.assertIn(msg, response.context['form'].errors.get('email'))
+        self.assertIn(msg, response.content.decode('utf-8'))
 
     # Coverage demands this test, but I dont know how to code it
 
