@@ -88,51 +88,6 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ]
-        # exclude = ['first_name']
-        # labels = {
-        #     'username': 'Username',
-        # 'first_name': 'First name',
-        # 'last_name': 'Last name',
-        # 'email': 'E-mail',
-        # }
-        # help_texts = {
-        #     'email': 'The e-mail must be valid.',
-        # }
-        # error_messages = {
-        #     'username': {
-        #         'required': 'This field must not be empty',
-        #     }
-        # }
-        # widgets = {
-        #     'first_name': forms.TextInput(attrs={
-        #         # i.e, add a class to the html code
-        #         'class': 'input text-input'
-        #     }),
-        # }
-
-    # def clean_password(self):
-    #     data = self.cleaned_data.get('password')
-
-    #     if 'atenção' in data:
-    #         raise ValidationError(
-    #             'Não digite %(value)s no campo password',
-    #             code='invalid',
-    #             params={'value': '"atenção"'}
-    #         )
-
-    #     return data
-
-    # def clean_first_name(self):
-    #     data = self.cleaned_data.get('first_name')
-
-    #     if 'John Doe' in data:
-    #         raise ValidationError(
-    #             'Não digite %(value)s no campo first name',
-    #             code='invalid',
-    #             params={'value': '"John Doe"'}
-    #         )
-
-    #     return data
 
     def clean_email(self):
 
