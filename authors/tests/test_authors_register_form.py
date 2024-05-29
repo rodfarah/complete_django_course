@@ -72,14 +72,14 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     ])
     def test_fields_cannot_be_empty(self, field, msg):
         self.form_data[field] = ''
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         self.assertIn(msg, response.content.decode('utf-8'))
 
     def test_username_field_more_than_4_chars(self):
         self.form_data['username'] = 'hi'
         num_of_char = len(self.form_data['username'])
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         msg = 'Ensure this value has at least 4 characters'
         f'(it has {num_of_char}).'
@@ -88,7 +88,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     def test_username_field_less_than_150_chars(self):
         self.form_data['username'] = 155*"a"
         num_of_char = len(self.form_data['username'])
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         msg = ('Ensure this value has at most 150 characters '
                f'(it has {num_of_char}).')
@@ -97,7 +97,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
 
     def test_password_field_have_lower_upper_case_letters_numbers(self):
         self.form_data['password'] = 'abck23sdd'
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         msg = ('Password must have at least one uppercase letter'
                ', one lowercase letter and one number. '
@@ -106,14 +106,14 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.assertIn(msg, response.context['form'].errors.get('password'))
 
         self.form_data['password'] = 'Sbck23sdd'
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         self.assertNotIn(msg, response.context['form'].errors.get('password'))
 
     def test_valid_password_doesnt_match_valid_password2(self):
         self.form_data['password'] = 'Adsd23*92'
         self.form_data['password2'] = 'YAdsd23*91'
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.post(url, data=self.form_data, follow=True)
         msg = 'Password and password2 must be equal'
         self.assertIn(msg, response.content.decode('utf-8'))
@@ -121,12 +121,12 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
             'password'))
 
     def test_register_view_raises_404_if_request_is_get(self):
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         response = self.client.get(url, data=self.form_data, follow=True)
         self.assertEqual(response.status_code, 404)
 
     def test_email_duplicity_raises_exception(self):
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         new_form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -143,7 +143,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.assertIn(msg, response.content.decode('utf-8'))
 
     def test_user_creater_can_login(self):
-        url = reverse('authors:create')
+        url = reverse('authors:register_create')
         self.client.post(url, self.form_data, follow=True)
         is_authenticated = self.client.login(
             username='user4',
@@ -154,7 +154,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     # Coverage demands this test, but I dont know how to code it
 
     # def test_register_create_messages_if_success(self):
-    #     url = reverse('authors:create')
+    #     url = reverse('authors:register_create')
     #     response = self.client.post(url, data=self.form_data, follow=True)
     #     session_data = self.client.session['register_form_data']
     #     self.assertEqual(session_data['username'], 'user')
