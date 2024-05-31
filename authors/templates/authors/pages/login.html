@@ -9,6 +9,19 @@
 </div>
 
 {% include "global/partials/messages.html" %}
+
+{% if request.user.is_authenticated %}
+    <div class="main-content center container">
+        <form class="inline-form" action="{% url 'authors:logout' %}" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ request.user.username }}">
+            <button class="plaintext-button" type='submit'>
+               Click here 
+            </button>
+        </form> to logout.
+    </div>
+{% endif %}
+
 {% include "global/partials/form.html" %}
 
 {% endblock content %}
