@@ -46,9 +46,7 @@ class RecipeHomeViewTest(RecipeTestBase):
 
     @patch('recipes.views.RECIPES_PER_PAGE', new=3)
     def test_recipe_home_is_paginated(self):
-        for n in range(8):
-            kwargs = {'slug': f'r{n}', 'author_data': {'username': f'u{n}'}}
-            self.make_recipe(**kwargs)
+        self.make_recipe_in_batch(ammount=8)
         response = self.client.get(reverse('recipes:home'))
         recipes = response.context['recipes']
         paginator = recipes.paginator
