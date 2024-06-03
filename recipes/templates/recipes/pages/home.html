@@ -10,7 +10,9 @@
   {% for recipe in recipes %}
    {% include 'recipes/partials/recipe.html' %} 
   {% empty %}
-    <h1 class="not-found">No recipes found here.</h1>
+    <div class="center m-y">
+      <h1 class="not-found">No recipes found here.</h1>
+    </div>
   {% endfor %}
 </div>
 {% endblock content %}
