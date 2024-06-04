@@ -5,11 +5,6 @@ from selenium.webdriver.common.keys import Keys
 
 class AuthorsRegisterTest(AuthorsBaseTest):
 
-    def get_by_placeholder(self, web_element: str, placeholder_text: str):
-        field = web_element.find_element(
-            By.XPATH, f'//input[@placeholder="{placeholder_text}"]')
-        return field
-
     def get_form(self):
         form = self.browser.find_element(
             By.XPATH, '/html/body/main/div[2]/form'
