@@ -1,7 +1,6 @@
 from .base import AuthorsBaseTest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from django.core.exceptions import ValidationError
 
 
 class AuthorsRegisterTest(AuthorsBaseTest):
