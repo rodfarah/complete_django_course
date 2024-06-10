@@ -66,7 +66,6 @@ class AuthorsRegisterTest(AuthorsBaseTest):
                 email_field.send_keys(Keys.LEFT)
                 email_field.send_keys(Keys.DELETE)
             email_field.send_keys("test@test")
-            self.sleep(8)
             email_field.send_keys(Keys.ENTER)
             form = self.get_form()
             self.assertIn(
@@ -80,7 +79,6 @@ class AuthorsRegisterTest(AuthorsBaseTest):
                 form, "Repeat your password")
             password2_field.send_keys('a'*10)
             password2_field.send_keys(Keys.ENTER)
-            self.sleep(2)
             form = self.get_form()
             pwd2_error_msg = form.find_element(
                 By.XPATH,
