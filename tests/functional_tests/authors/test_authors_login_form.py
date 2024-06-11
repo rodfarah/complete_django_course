@@ -1,9 +1,11 @@
 import pytest
-from .base import AuthorsBaseTest
 from django.contrib.auth.models import User
-from selenium.webdriver.common.by import By
-# from selenium.webdriver.common.keys import Keys
 from django.urls import reverse
+from selenium.webdriver.common.by import By
+
+from .base import AuthorsBaseTest
+
+# from selenium.webdriver.common.keys import Keys
 
 
 @pytest.mark.functional_test
@@ -42,4 +44,51 @@ class AuthorsLoginTest(AuthorsBaseTest):
         self.assertIn(
             expected_message,
             self.browser.find_element(By.CLASS_NAME, 'message-success').text
+        )
+
+    def test_login_create_raises_404_if_not_POST_method(self):
+        self.browser.get(self.live_server_url +
+                         reverse('authors:login_create'))
+        self.assertIn('Not Found', self.browser.find_element(
+            By.TAG_NAME, 'h1').text
+        )
+
+    def test_login_invalid_form_raises_error_message(self):
+        # User opens login page
+        self.browser.get(self.live_server_url +
+                         reverse('authors:login'))
+        # we now get the form and find username field
+        form = self.get_login_form()
+        username_field = self.get_by_placeholder(form, 'Type your username')
+        password_field = self.get_by_placeholder(form, 'Type your password')
+
+        # user inserts only one space as username (Django kills empty spaces)
+        username_field.send_keys(' ')
+        password_field.send_keys(' ')
+        # user sends form
+        form.submit()
+
+        self.assertIn(
+            'Form data is not valid.',
+            self.browser.find_element(By.CLASS_NAME, 'message-error').text
+        )
+
+    def test_login_form_invalid_credentials(self):
+        # User opens login page
+        self.browser.get(self.live_server_url +
+                         reverse('authors:login'))
+        # we now get the form and find username field
+        form = self.get_login_form()
+        username_field = self.get_by_placeholder(form, 'Type your username')
+        password_field = self.get_by_placeholder(form, 'Type your password')
+
+        # user inserts unmatched username and password
+        username_field.send_keys('invalid_username')
+        password_field.send_keys('invalid_password')
+        # user sends form
+        form.submit()
+
+        self.assertIn(
+            'Invalid username and/or password. Please, try again.',
+            self.browser.find_element(By.CLASS_NAME, 'message-error').text
         )
