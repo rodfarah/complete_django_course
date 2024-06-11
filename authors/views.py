@@ -47,7 +47,6 @@ def login_create(request):
         raise Http404()
 
     form = LoginForm(request.POST)
-    login_url = reverse('authors:login')
     if form.is_valid():
         username = form.cleaned_data.get('username', '')
         password = form.cleaned_data.get('password', '')
@@ -65,7 +64,7 @@ def login_create(request):
     else:
         messages.error(
             request, 'Form data is not valid.')
-    return redirect(login_url)
+    return redirect(reverse('authors:dashboard'))
 
 
 @login_required(login_url='authors:login', redirect_field_name='next')
@@ -80,3 +79,8 @@ def logout_view(request):
     messages.success(request, 'You are now logged out')
     logout(request)
     return redirect(reverse('authors:login'))
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_view(request):
+    return render(request, 'authors/pages/dashboard.html')
