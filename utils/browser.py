@@ -27,5 +27,4 @@ def make_chrome_browser(*options):
 if __name__ == '__main__':
     browser = make_chrome_browser('--headless')
     browser.get('https://www.twoofus.com.br')
-    browser.sleep(5)
     browser.quit()
