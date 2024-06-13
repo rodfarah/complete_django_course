@@ -1,9 +1,13 @@
 {% if request.user.is_authenticated %}
     <div class="login-message">
         Logged in as {{ request.user.username }}.
+        <br>
         {% if not request.get_full_path == '/authors/dashboard/' %}
         <a href="{% url 'authors:dashboard' %}">See all your recipes </a> or
         {% endif %} 
+        {% if not request.get_full_path == '/authors/dashboard/recipe/new/' %}
+        <a href="{% url 'authors:new_recipe' %}">Create a new recipe </a>or 
+        {% endif %}
         <form class="inline-form" action="{% url 'authors:logout' %}" method="POST" >
             {% csrf_token %}
             <input type="hidden" name="username" value="{{ request.user.username }}">
